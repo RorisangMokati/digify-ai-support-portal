@@ -28,3 +28,4 @@ Project setup and research phase.
 * Sanelisiwe Mbhele
 * Noluthando Shangase 
 * Sbahle Ngidi 
+*Tristan Govender
