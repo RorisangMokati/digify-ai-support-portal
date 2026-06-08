@@ -34,3 +34,10 @@ dist-ssr
 .workspace/
 
 /src/generated/prisma
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+/src/generated/prisma
