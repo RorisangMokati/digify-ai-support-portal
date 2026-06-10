@@ -2,8 +2,8 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { db } from "../db";
-import { sendToZendesk } from "../zendesk";
+import { db } from "./db";
+import { sendToZendesk } from "./zendesk";
 
 export const createTicket = createServerFn({ method: "POST" })
   .inputValidator(
