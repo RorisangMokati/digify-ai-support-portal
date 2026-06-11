@@ -29,7 +29,7 @@ import {
 import { AlertCircle, CheckCircle2, SendHorizonal } from "lucide-react";
 
 // ✅ SERVER FUNCTION (no fetch, no CORS)
-import { createTicket } from "@/server/tickets/create";
+//import { createTicket } from "@/server/tickets/create";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -65,21 +65,17 @@ function SubmitRequest() {
 
     try {
       // ✅ SERVER CALL (NO FETCH)
-      const res = await createTicket({
-        data: {
-          title: subject,
-          message: description,
-          category,
-          priority,
-        },
-      });
+      console.log("Ticket would be created", {
+  title: subject,
+  message: description,
+  category,
+  priority,
+});
 
-      console.log("Ticket created:", res.ticket);
-
-      setStatus("success");
+setStatus("success");
 
       toast.success("Request submitted", {
-        description: `Ticket ${res.ticket.id} created successfully.`,
+        description: "Frontend test successful.",
       });
 
       // reset form
