@@ -1,0 +1,18 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { tickets } from "@/lib/tickets";
+
+export const Route = createFileRoute("/tickets")({
+  component: TicketsPage,
+});
+
+function TicketsPage() {
+  return (
+    <div className="p-6">
+      <h1>Tickets Test</h1>
+
+      <pre>
+        {JSON.stringify(tickets, null, 2)}
+      </pre>
+    </div>
+  );
+}
