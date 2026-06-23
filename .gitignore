@@ -41,3 +41,7 @@ dist-ssr
 .env.*
 !.env.example
 /src/generated/prisma
+
+.agents/
+skills-lock.json
+

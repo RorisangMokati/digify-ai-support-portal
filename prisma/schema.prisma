@@ -7,14 +7,14 @@ datasource db {
 }
 
 model Ticket {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   title     String
   message   String
   status    TicketStatus @default(OPEN)
   priority  Priority     @default(MEDIUM)
   category  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 enum TicketStatus {
