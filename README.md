@@ -1,151 +1,78 @@
-# 📈 Project History & Milestones
+📈 Digify AI Support Portal
 
-## Phase 0 – Initial Cloudflare Worker Prototype ✅
+An AI-powered support operations platform that modernizes ticket management by combining React, TanStack, Prisma, PostgreSQL, and Zendesk integration into a scalable full-stack system.
 
-The project began as a Cloudflare Worker-powered support API used to validate ticketing workflows and AI support concepts.
+📊 Project History & Milestones
+Phase 0 – Initial Cloudflare Worker Prototype ✅
 
-### Implemented Endpoints
+The project began as a lightweight Cloudflare Worker-based support API to validate ticketing workflows and AI support concepts.
 
-#### Health Check
+Implemented Endpoints
 
-```text
+Health Check
+
 GET /
-```
+Verifies deployment and service availability
 
-Purpose:
+Chat API Prototype
 
-* Verify Worker deployment
-* Confirm service availability
-
-#### Chat API Prototype
-
-```text
 POST /api/chat
-```
+Accepts user support queries
+Returns structured responses
+Foundation for future AI integration
 
-Capabilities:
+Ticket API Prototype
 
-* Accept user support queries
-* Return structured responses
-* Foundation for future OpenAI integration
-
-#### Ticket API Prototype
-
-```text
 POST /api/tickets
-```
-
-Capabilities:
-
-* Generate ticket identifiers
-* Return structured ticket payloads
-* Simulate support request workflows
-
-### API Testing Completed
-
-Chat endpoint successfully tested via PowerShell.
-
-Example:
-
-```powershell
+Generates ticket IDs
+Returns structured ticket payloads
+Simulates support workflows
+API Testing Example
 Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/chat" `
 -Method POST `
 -Headers @{ "Content-Type" = "application/json" } `
 -Body '{"message":"Hello"}'
-```
+Phase 1 – Frontend Foundation ✅
 
-Ticket endpoint successfully tested via PowerShell.
-
-Example:
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/tickets" `
--Method POST `
--Headers @{ "Content-Type" = "application/json" } `
--Body '{"title":"Login Issue"}'
-```
-
-### Cloudflare Tooling
-
-Implemented:
-
-* Wrangler CLI
-* Local Worker runtime
-* API route testing
-* GitHub source control integration
-
----
-
-## Phase 1 – Frontend Foundation ✅
+Built a modern frontend using React + Vite.
 
 Completed:
+Vite project setup
+React + TypeScript configuration
+Routing structure
+UI component system
+Ticket submission form
+Validation & error handling
+Status notifications
+Phase 2 – Architecture Modernization ✅
 
-* Vite project setup
-* React application scaffold
-* TypeScript configuration
-* Initial routing structure
-* UI component library integration
-* Ticket submission page
-* Form validation
-* Status notifications
-* Error handling
+Evolved from a simple Worker system into a full-stack production architecture.
 
----
+Previous Architecture
 
-## Phase 2 – Architecture Modernization ✅
+Frontend → Cloudflare Worker → Mock Storage
 
-During development, the project evolved from a browser → Worker architecture into a modern full-stack application.
+Current Architecture
 
-### Previous Architecture
+Frontend (React + TanStack Router)
+→ Server Functions (TanStack Start)
+→ Prisma ORM
+→ PostgreSQL
+→ Zendesk Integration
 
-```text
-Frontend (React)
-       ↓
-Cloudflare Worker
-       ↓
-Mock Ticket Storage
-```
-
-### Current Architecture
-
-```text
-React Frontend
-       ↓
-TanStack Router
-       ↓
-TanStack Start Server Functions
-       ↓
-Prisma ORM
-       ↓
-PostgreSQL
-       ↓
-Zendesk Integration
-```
-
-Benefits gained:
-
-* Elimination of browser CORS issues
-* Strong type safety
-* Improved security
-* Simplified API communication
-* Production-ready backend architecture
-
----
-
-## Phase 3 – Database Integration 🚧
-
-Progress completed:
-
-* Prisma installed
-* Prisma initialized
-* Prisma Client generated
-* Prisma Postgres local environment configured
-* Database schema designed
-* Ticket model created
-
-Current ticket schema:
-
-```prisma
+Improvements:
+Eliminated CORS issues
+Strong type safety
+Secure backend logic
+Production-ready structure
+Cleaner separation of concerns
+Phase 3 – Database Integration 🚧
+Completed:
+Prisma installed and initialized
+Prisma Client generated
+PostgreSQL configured
+Ticket schema designed
+Ticket Schema:
 model Ticket {
   id        String   @id @default(uuid())
   title     String
@@ -156,221 +83,114 @@ model Ticket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-```
+In Progress:
+Database migrations
+Ticket persistence layer
+Prisma Studio setup
+Service layer architecture
+Phase 4 – Zendesk Integration 🚧
 
-In progress:
+Designed for enterprise support workflows.
 
-* Migration execution
-* Ticket persistence
-* Prisma Studio connectivity
-* Database service layer implementation
+Workflow:
 
----
+User Submission → Portal Ticket → Database → Zendesk → Agent Assignment → Sync
 
-## Phase 4 – Zendesk Integration 🚧
+Upcoming:
+Zendesk API integration
+Ticket synchronization
+Webhooks
+Agent assignment logic
+⚙️ Development Challenges Solved
+CORS Issue
 
-Architecture designed and prepared.
+Problem: Browser blocked API calls
 
-Planned workflow:
+Solution:
 
-```text
-User Submission
-        ↓
-Portal Ticket
-        ↓
-Database Storage
-        ↓
-Zendesk Ticket Creation
-        ↓
-Agent Assignment
-        ↓
-Status Synchronization
-```
-
-Upcoming features:
-
-* Zendesk API integration
-* Ticket synchronization
-* Agent assignment workflows
-* Status updates
-* Webhook support
-
----
-
-## Development Challenges Solved
-
-### CORS Resolution
-
-Issue encountered:
-
-```text
-Access to fetch has been blocked by CORS policy
-```
-
-Resolution:
-
-* Removed direct browser-to-Worker API dependency
-* Introduced TanStack Server Functions
-* Moved business logic server-side
+Moved logic to server functions (TanStack Start)
+Removed direct browser → Worker dependency
 
 Result:
 
-* Improved security
-* Improved maintainability
-* Eliminated CORS-related failures
+Improved security
+Stable API communication
+Cleaner architecture
+📊 Current Progress
+Area	Progress
+Frontend UI	85%
+Routing	90%
+Ticket Submission	75%
+Backend Architecture	70%
+Database Integration	40%
+Zendesk Integration	20%
+Authentication	0%
+AI Integration	0%
 
----
+Overall Project: 55%
 
-## Current Overall Progress
-
-| Area                 | Progress |
-| -------------------- | -------- |
-| Frontend UI          | 85%      |
-| Routing              | 90%      |
-| Ticket Submission    | 75%      |
-| Backend Architecture | 70%      |
-| Database Integration | 40%      |
-| Zendesk Integration  | 20%      |
-| Authentication       | 0%       |
-| AI Integration       | 0%       |
-| Overall Project      | 55%      |
-
----
-
-## Next Major Milestones
-
-### Immediate
-
-* Complete Prisma database integration
-* Persist tickets to PostgreSQL
-* Connect Zendesk API
-* Build ticket retrieval functionality
-
-### Short-Term
-
-* Authentication
-* Role-based access control
-* Admin dashboard
-* Ticket management interface
-
-### Long-Term
-
-* OpenAI integration
-* AI ticket triage
-* Knowledge base assistant
-* Analytics and reporting
-* Cloud deployment
-* CI/CD pipeline
-
-
-## ⚙️ Local Development
-
-### 1. Clone repo
-
-```bash
+🚀 Next Milestones
+Immediate
+Complete Prisma integration
+Persist tickets to PostgreSQL
+Connect Zendesk API
+Build ticket retrieval system
+Short-Term
+Authentication system
+Role-based access control
+Admin dashboard
+Ticket management UI
+Long-Term
+OpenAI integration
+AI ticket triage
+Analytics dashboard
+CI/CD pipeline
+Cloud deployment
+🧪 Local Development
+1. Clone repository
 git clone https://github.com/RorisangMokati/digify-ai-support-portal.git
 cd digify-ai-support-ops-portal
-```
-
----
-
-### 2. Install dependencies
-
-Frontend:
-
-```bash
+2. Install dependencies
 npm install
-```
-
-Worker:
-
-```bash
+3. Run frontend
+npm run dev
+4. Run Worker
 cd worker/ai-support-worker
 npm install
-```
-
----
-
-### 3. Run frontend
-
-```bash
 npm run dev
-```
 
----
+Worker runs at:
 
-### 4. Run Cloudflare Worker
-
-```bash
-cd worker/ai-support-worker
-npm run dev
-```
-
-Worker runs on:
-
-```
 http://127.0.0.1:8787
-```
-
----
-
-## 🧪 API Testing
-
-### Chat Endpoint
-
-```powershell
+🧪 API Testing
+Chat Endpoint
 Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/chat" `
 -Method POST `
 -Headers @{ "Content-Type" = "application/json" } `
 -Body '{"message":"Hello"}'
-```
-
----
-
-### Ticket Endpoint
-
-```powershell
+Ticket Endpoint
 Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/tickets" `
 -Method POST `
 -Headers @{ "Content-Type" = "application/json" } `
 -Body '{"title":"Login Issue"}'
-```
-
----
-
-## 🚧 Current Status
-
-✅ Frontend UI scaffolded
-✅ Cloudflare Worker API built
-✅ Endpoints tested successfully
-✅ GitHub repository connected
-⬜ AI integration (next step)
-⬜ Frontend ↔ Backend connection
-⬜ Deployment to Cloudflare
-
----
-
-## 🔮 Roadmap
-
-* [ ] Integrate OpenAI into `/api/chat`
-* [ ] Connect frontend chat UI to backend
-* [ ] Store tickets in database (D1 / Firebase)
-* [ ] Add authentication (optional)
-* [ ] Deploy to Cloudflare Workers
-
----
-
-## 👥 Contributors
-
-* Rorisang Mokati
-* Sanelisiwe Mbhele
-* Noluthando Shangase
-* Sbahle Ngidi
-* Tristan Govender
-
----
-
-## 📄 License
+🚧 Current Status
+Frontend scaffold complete
+API endpoints functional
+Worker tested successfully
+GitHub repository connected
+🔮 Roadmap
+OpenAI integration into /api/chat
+Frontend chat UI connection
+Database persistence (PostgreSQL)
+Authentication system
+Cloudflare deployment
+👥 Contributors
+Rorisang Mokati
+Sanelisiwe Mbhele
+Noluthando Shangase
+Sbahle Ngidi
+Tristan Govender
+📄 License
 
 MIT License
 
