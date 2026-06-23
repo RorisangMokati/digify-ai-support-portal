@@ -1,42 +1,48 @@
-📈 Digify AI Support Portal
+# 📈 Digify AI Support Portal
 
-An AI-powered support operations platform that modernizes ticket management by combining React, TanStack, Prisma, PostgreSQL, and Zendesk integration into a scalable full-stack system.
+An AI-powered support operations platform that modernizes ticket management by combining **React, TanStack, Prisma, PostgreSQL, and Zendesk integration** into a scalable full-stack system.
 
-📊 Project History & Milestones
-Phase 0 – Initial Cloudflare Worker Prototype ✅
+---
+
+# 📊 Project History & Milestones
+
+## Phase 0 – Initial Cloudflare Worker Prototype ✅
 
 The project began as a lightweight Cloudflare Worker-based support API to validate ticketing workflows and AI support concepts.
 
-Implemented Endpoints
+### Implemented Endpoints
 
-Health Check
+#### Health Check
+- `GET /`
+- Verifies deployment and service availability
 
-GET /
-Verifies deployment and service availability
+#### Chat API Prototype
+- `POST /api/chat`
+- Accepts user support queries
+- Returns structured responses
+- Foundation for future AI integration
 
-Chat API Prototype
+#### Ticket API Prototype
+- `POST /api/tickets`
+- Generates ticket IDs
+- Returns structured ticket payloads
+- Simulates support workflows
 
-POST /api/chat
-Accepts user support queries
-Returns structured responses
-Foundation for future AI integration
+---
 
-Ticket API Prototype
+### API Testing Example
 
-POST /api/tickets
-Generates ticket IDs
-Returns structured ticket payloads
-Simulates support workflows
-API Testing Example
+```bash
 Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/chat" `
 -Method POST `
 -Headers @{ "Content-Type" = "application/json" } `
 -Body '{"message":"Hello"}'
+
 Phase 1 – Frontend Foundation ✅
 
 Built a modern frontend using React + Vite.
 
-Completed:
+Completed
 Vite project setup
 React + TypeScript configuration
 Routing structure
@@ -46,7 +52,7 @@ Validation & error handling
 Status notifications
 Phase 2 – Architecture Modernization ✅
 
-Evolved from a simple Worker system into a full-stack production architecture.
+Evolved into a full-stack production architecture.
 
 Previous Architecture
 
@@ -60,19 +66,19 @@ Frontend (React + TanStack Router)
 → PostgreSQL
 → Zendesk Integration
 
-Improvements:
+Improvements
 Eliminated CORS issues
 Strong type safety
 Secure backend logic
 Production-ready structure
 Cleaner separation of concerns
 Phase 3 – Database Integration 🚧
-Completed:
+Completed
 Prisma installed and initialized
 Prisma Client generated
 PostgreSQL configured
 Ticket schema designed
-Ticket Schema:
+Ticket Schema
 model Ticket {
   id        String   @id @default(uuid())
   title     String
@@ -83,7 +89,7 @@ model Ticket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-In Progress:
+In Progress
 Database migrations
 Ticket persistence layer
 Prisma Studio setup
@@ -92,11 +98,11 @@ Phase 4 – Zendesk Integration 🚧
 
 Designed for enterprise support workflows.
 
-Workflow:
+Workflow
 
 User Submission → Portal Ticket → Database → Zendesk → Agent Assignment → Sync
 
-Upcoming:
+Upcoming
 Zendesk API integration
 Ticket synchronization
 Webhooks
@@ -147,14 +153,14 @@ Analytics dashboard
 CI/CD pipeline
 Cloud deployment
 🧪 Local Development
-1. Clone repository
+Clone repository
 git clone https://github.com/RorisangMokati/digify-ai-support-portal.git
 cd digify-ai-support-ops-portal
-2. Install dependencies
+Install dependencies
 npm install
-3. Run frontend
+Run frontend
 npm run dev
-4. Run Worker
+Run Worker
 cd worker/ai-support-worker
 npm install
 npm run dev
@@ -184,7 +190,8 @@ Frontend chat UI connection
 Database persistence (PostgreSQL)
 Authentication system
 Cloudflare deployment
-👥 Contributors
+
+👥 ###Contributors
 Rorisang Mokati
 Sanelisiwe Mbhele
 Noluthando Shangase
@@ -193,4 +200,3 @@ Tristan Govender
 📄 License
 
 MIT License
-
