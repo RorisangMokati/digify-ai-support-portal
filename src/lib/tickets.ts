@@ -1,4 +1,14 @@
-import type { Ticket } from "./ticket-types";
+type Ticket = {
+  id: string;
+  ticketNo: string;
+  subject: string;
+  description: string;
+  status: "OPEN" | "IN_PROGRESS" | "WAITING" | "RESOLVED" | "CLOSED";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  category: string;
+  assignee: string;
+  createdAt: string;
+};
 
 export const tickets: Ticket[] = [
   {

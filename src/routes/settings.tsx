@@ -8,14 +8,21 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — AI Support Operations" },
-      { name: "description", content: "Configure your portal preferences, notifications, and AI routing." },
+      {
+        name: "description",
+        content: "Configure your portal preferences, notifications, and AI routing.",
+      },
     ],
   }),
   component: SettingsPage,
@@ -32,7 +39,9 @@ function SettingsPage() {
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">Manage your profile, notifications, and routing rules.</p>
+        <p className="text-sm text-muted-foreground">
+          Manage your profile, notifications, and routing rules.
+        </p>
       </div>
 
       <Card>
@@ -47,7 +56,12 @@ function SettingsPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
         </CardContent>
       </Card>
@@ -61,7 +75,9 @@ function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Email alerts</p>
-              <p className="text-xs text-muted-foreground">Get notified when a request is assigned or updated.</p>
+              <p className="text-xs text-muted-foreground">
+                Get notified when a request is assigned or updated.
+              </p>
             </div>
             <Switch checked={emailAlerts} onCheckedChange={setEmailAlerts} />
           </div>
@@ -69,7 +85,9 @@ function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">AI auto-triage</p>
-              <p className="text-xs text-muted-foreground">Allow AI to route new requests to the best team automatically.</p>
+              <p className="text-xs text-muted-foreground">
+                Allow AI to route new requests to the best team automatically.
+              </p>
             </div>
             <Switch checked={autoTriage} onCheckedChange={setAutoTriage} />
           </div>
@@ -83,7 +101,9 @@ function SettingsPage() {
         </CardHeader>
         <CardContent>
           <Select value={region} onValueChange={setRegion}>
-            <SelectTrigger className="sm:w-[260px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="sm:w-[260px]">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="us-east-1">US East (N. Virginia)</SelectItem>
               <SelectItem value="us-west-2">US West (Oregon)</SelectItem>

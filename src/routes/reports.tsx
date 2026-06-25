@@ -1,62 +1,105 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BarChart3, TrendingUp, Users, Timer } from "lucide-react";
-import { StatCard } from "@/components/stat-card";
+import { useCallback, useState } from "react";
+import { BarChart3, Timer, TrendingUp, Users } from "lucide-react";
+
 import { RecentRequestsTable } from "@/components/recent-requests-table";
+import { StatCard } from "@/components/stat-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { SupportRequest } from "@/lib/support-requests";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — AI Support Operations" },
-      { name: "description", content: "Analytics and performance reports for the support operations team." },
+      { title: "Reports - AI Support Operations" },
+      {
+        name: "description",
+        content: "Analytics and performance reports for the support operations team.",
+      },
     ],
   }),
   component: Reports,
 });
 
-const weekly = [
-  { day: "Mon", value: 64 },
-  { day: "Tue", value: 78 },
-  { day: "Wed", value: 52 },
-  { day: "Thu", value: 91 },
-  { day: "Fri", value: 70 },
-  { day: "Sat", value: 33 },
-  { day: "Sun", value: 28 },
-];
-
 function Reports() {
-  const max = Math.max(...weekly.map((d) => d.value));
+  const [requests, setRequests] = useState<SupportRequest[]>([]);
+  const handleLoaded = useCallback((data: SupportRequest[]) => setRequests(data), []);
+
+  const completed = requests.filter(
+    (request) => request.status === "resolved" || request.status === "closed",
+  ).length;
+  const blocked = requests.filter(
+    (request) => request.status === "blocked" || request.blockers.length > 0,
+  ).length;
+  const owners = new Set(requests.map((request) => request.assigned_owner).filter(Boolean)).size;
+  const resolutionRate = requests.length > 0 ? Math.round((completed / requests.length) * 100) : 0;
+  const categories = buildCategoryReport(requests);
+  const maxCategoryCount = Math.max(1, ...categories.map((category) => category.count));
+
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Reports</h1>
-        <p className="text-sm text-muted-foreground">Performance, throughput, and team analytics.</p>
+        <p className="text-sm text-muted-foreground">
+          Performance, throughput, blockers, and ownership visibility.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Volume (30d)" value="1,284" delta="+6.4%" trend="up" icon={BarChart3} />
-        <StatCard label="Resolution Rate" value="94.1%" delta="+1.8 pts" trend="up" icon={TrendingUp} />
-        <StatCard label="Active Agents" value={18} delta="3 on-call" trend="neutral" icon={Users} />
-        <StatCard label="SLA Breach" value="0.7%" delta="-0.3 pts" trend="up" icon={Timer} />
+        <StatCard
+          label="Total Requests"
+          value={requests.length}
+          delta="Loaded from tracker"
+          trend="neutral"
+          icon={BarChart3}
+        />
+        <StatCard
+          label="Resolution Rate"
+          value={`${resolutionRate}%`}
+          delta={`${completed} completed`}
+          trend="up"
+          icon={TrendingUp}
+        />
+        <StatCard
+          label="Active Owners"
+          value={owners}
+          delta="Recommended or assigned"
+          trend="neutral"
+          icon={Users}
+        />
+        <StatCard
+          label="Blocked Items"
+          value={blocked}
+          delta="Needs follow-up"
+          trend={blocked > 0 ? "down" : "up"}
+          icon={Timer}
+        />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Weekly Request Volume</CardTitle>
-          <CardDescription>Requests created per day this week.</CardDescription>
+          <CardTitle>Requests by Category</CardTitle>
+          <CardDescription>AI-classified operational request volume.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-56 items-end gap-3">
-            {weekly.map((d) => (
-              <div key={d.day} className="flex flex-1 flex-col items-center gap-2">
-                <div className="flex w-full flex-1 items-end">
+          <div className="grid gap-3">
+            {categories.length === 0 && (
+              <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+                Submit requests to populate reporting.
+              </div>
+            )}
+
+            {categories.map((category) => (
+              <div key={category.name} className="grid gap-1.5">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-medium">{category.name}</span>
+                  <span className="text-muted-foreground">{category.count}</span>
+                </div>
+                <div className="h-2 rounded-full bg-muted">
                   <div
-                    className="w-full rounded-t-md bg-primary/80 transition-all hover:bg-primary"
-                    style={{ height: `${(d.value / max) * 100}%` }}
-                    title={`${d.value} requests`}
+                    className="h-2 rounded-full bg-primary"
+                    style={{ width: `${(category.count / maxCategoryCount) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-muted-foreground">{d.day}</span>
               </div>
             ))}
           </div>
@@ -64,9 +107,21 @@ function Reports() {
       </Card>
 
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold tracking-tight">Latest Activity</h2>
-        <RecentRequestsTable />
+        <h2 className="text-lg font-semibold tracking-tight">Tracker Activity</h2>
+        <RecentRequestsTable limit={20} onLoaded={handleLoaded} />
       </div>
     </div>
   );
+}
+
+function buildCategoryReport(requests: SupportRequest[]) {
+  const counts = requests.reduce<Record<string, number>>((acc, request) => {
+    const key = request.category || "Unclassified";
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.entries(counts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
 }

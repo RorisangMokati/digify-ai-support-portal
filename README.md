@@ -1,376 +1,322 @@
-# 📈 Project History & Milestones
+# AI Support Operations Portal
 
-## Phase 0 – Initial Cloudflare Worker Prototype ✅
+An internal support operations portal for capturing project/support requests, classifying them with Groq AI, storing structured tracker data in Supabase, and displaying operational reporting for handover and team visibility.
 
-The project began as a Cloudflare Worker-powered support API used to validate ticketing workflows and AI support concepts.
+## Project Purpose
 
-### Implemented Endpoints
+Internal project work can become spread across tickets, spreadsheets, chat messages, and verbal updates. This project creates one controlled intake and tracking flow so requests can be captured, classified, assigned, monitored, and reported on.
 
-#### Health Check
+The goal is a working proof-of-delivery system with a clear frontend, API layer, AI processing, tracker storage, dashboard, and handover documentation.
+
+## Current Architecture
+
+```text
+React frontend
+        -> Cloudflare Worker API
+        -> Groq AI processing
+        -> Supabase support_requests table
+        -> Dashboard and reporting views
+```
+
+## What The App Does
+
+- Captures support/project requests through a React form.
+- Validates request data before processing.
+- Sends requests to a Cloudflare Worker backend.
+- Uses Groq AI to classify and structure request details.
+- Stores structured request records in Supabase.
+- Displays request status, priority, owner, evidence links, and reporting data.
+- Provides setup and handover documentation for future maintainers.
+
+## Main Features
+
+- Request submission form
+- Requester name and email capture
+- Department selection
+- Evidence link capture
+- AI-generated summary
+- AI-generated category and priority
+- Recommended owner
+- Risk/blocker indicators
+- Dashboard overview
+- Reporting page
+- Cloudflare Worker API
+- Supabase tracker table
+
+## Tech Stack
+
+- React
+- Vite
+- TanStack Router / TanStack Start
+- TypeScript
+- Tailwind CSS
+- Cloudflare Workers
+- Groq AI
+- Supabase
+- Netlify for frontend hosting
+
+## Important Files
+
+```text
+src/routes/submit.tsx
+```
+
+Request submission page.
+
+```text
+src/routes/index.tsx
+```
+
+Dashboard page.
+
+```text
+src/routes/reports.tsx
+```
+
+Reporting page.
+
+```text
+src/lib/support-requests.ts
+```
+
+Frontend API client for communicating with the Worker.
+
+```text
+worker/ai-support-worker/src/index.ts
+```
+
+Cloudflare Worker API. Handles validation, Groq processing, Supabase storage, and API responses.
+
+```text
+docs/supabase-schema.sql
+```
+
+SQL schema for the Supabase `support_requests` table.
+
+```text
+HANDOVER.md
+```
+
+Operational setup, deployment, known issues, and next steps.
+
+## Environment Variables
+
+### Frontend
+
+Create `.env` in the project root:
+
+```env
+VITE_WORKER_API_URL=http://127.0.0.1:8787
+```
+
+For Netlify, replace this with the deployed Cloudflare Worker URL:
+
+```env
+VITE_WORKER_API_URL=https://your-worker.your-subdomain.workers.dev
+```
+
+### Cloudflare Worker
+
+Create `worker/ai-support-worker/.dev.vars`:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+GROQ_MODEL=llama-3.1-8b-instant
+ALLOWED_ORIGIN=http://localhost:8080
+```
+
+Do not place `GROQ_API_KEY` or `SUPABASE_SERVICE_ROLE_KEY` in the frontend environment. They must stay server-side in the Worker.
+
+## Supabase Setup
+
+1. Create a Supabase project.
+2. Open the Supabase SQL Editor.
+3. Run the SQL from:
+
+```text
+docs/supabase-schema.sql
+```
+
+This creates the `support_requests` tracker table used by the Worker and dashboard.
+
+## Local Development
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Install Worker dependencies:
+
+```bash
+cd worker/ai-support-worker
+npm install
+```
+
+Start the Cloudflare Worker:
+
+```bash
+cd worker/ai-support-worker
+npm run dev
+```
+
+Start the frontend from the project root:
+
+```bash
+npm run dev
+```
+
+The frontend usually runs at:
+
+```text
+http://localhost:8080
+```
+
+The Worker usually runs at:
+
+```text
+http://127.0.0.1:8787
+```
+
+## API Endpoints
+
+### Health Check
 
 ```text
 GET /
 ```
 
-Purpose:
+Returns API status and available endpoints.
 
-* Verify Worker deployment
-* Confirm service availability
-
-#### Chat API Prototype
+### Create Request
 
 ```text
-POST /api/chat
+POST /api/requests
 ```
 
-Capabilities:
+Example body:
 
-* Accept user support queries
-* Return structured responses
-* Foundation for future OpenAI integration
-
-#### Ticket API Prototype
-
-```text
-POST /api/tickets
-```
-
-Capabilities:
-
-* Generate ticket identifiers
-* Return structured ticket payloads
-* Simulate support request workflows
-
-### API Testing Completed
-
-Chat endpoint successfully tested via PowerShell.
-
-Example:
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/chat" `
--Method POST `
--Headers @{ "Content-Type" = "application/json" } `
--Body '{"message":"Hello"}'
-```
-
-Ticket endpoint successfully tested via PowerShell.
-
-Example:
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/tickets" `
--Method POST `
--Headers @{ "Content-Type" = "application/json" } `
--Body '{"title":"Login Issue"}'
-```
-
-### Cloudflare Tooling
-
-Implemented:
-
-* Wrangler CLI
-* Local Worker runtime
-* API route testing
-* GitHub source control integration
-
----
-
-## Phase 1 – Frontend Foundation ✅
-
-Completed:
-
-* Vite project setup
-* React application scaffold
-* TypeScript configuration
-* Initial routing structure
-* UI component library integration
-* Ticket submission page
-* Form validation
-* Status notifications
-* Error handling
-
----
-
-## Phase 2 – Architecture Modernization ✅
-
-During development, the project evolved from a browser → Worker architecture into a modern full-stack application.
-
-### Previous Architecture
-
-```text
-Frontend (React)
-       ↓
-Cloudflare Worker
-       ↓
-Mock Ticket Storage
-```
-
-### Current Architecture
-
-```text
-React Frontend
-       ↓
-TanStack Router
-       ↓
-TanStack Start Server Functions
-       ↓
-Prisma ORM
-       ↓
-PostgreSQL
-       ↓
-Zendesk Integration
-```
-
-Benefits gained:
-
-* Elimination of browser CORS issues
-* Strong type safety
-* Improved security
-* Simplified API communication
-* Production-ready backend architecture
-
----
-
-## Phase 3 – Database Integration 🚧
-
-Progress completed:
-
-* Prisma installed
-* Prisma initialized
-* Prisma Client generated
-* Prisma Postgres local environment configured
-* Database schema designed
-* Ticket model created
-
-Current ticket schema:
-
-```prisma
-model Ticket {
-  id        String   @id @default(uuid())
-  title     String
-  message   String
-  status    String   @default("open")
-  priority  String   @default("medium")
-  category  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+```json
+{
+  "title": "Cannot access project tracker",
+  "description": "The project team cannot access the tracker and needs help before the end-of-day update.",
+  "requesterName": "Jane Doe",
+  "requesterEmail": "jane@example.com",
+  "department": "Operations",
+  "evidenceLinks": ["https://example.com/screenshot"]
 }
 ```
 
-In progress:
-
-* Migration execution
-* Ticket persistence
-* Prisma Studio connectivity
-* Database service layer implementation
-
----
-
-## Phase 4 – Zendesk Integration 🚧
-
-Architecture designed and prepared.
-
-Planned workflow:
+### List Requests
 
 ```text
-User Submission
-        ↓
-Portal Ticket
-        ↓
-Database Storage
-        ↓
-Zendesk Ticket Creation
-        ↓
-Agent Assignment
-        ↓
-Status Synchronization
+GET /api/requests
 ```
 
-Upcoming features:
+Returns stored tracker requests from Supabase.
 
-* Zendesk API integration
-* Ticket synchronization
-* Agent assignment workflows
-* Status updates
-* Webhook support
-
----
-
-## Development Challenges Solved
-
-### CORS Resolution
-
-Issue encountered:
+### Update Request
 
 ```text
-Access to fetch has been blocked by CORS policy
+PATCH /api/requests/:id
 ```
 
-Resolution:
+Supported update fields:
 
-* Removed direct browser-to-Worker API dependency
-* Introduced TanStack Server Functions
-* Moved business logic server-side
+```json
+{
+  "status": "in_progress",
+  "assigned_owner": "Support Operations",
+  "blockers": ["Waiting for access approval"],
+  "evidence_links": ["https://example.com/evidence"]
+}
+```
 
-Result:
+## What Changed From The Previous Version
 
-* Improved security
-* Improved maintainability
-* Eliminated CORS-related failures
+The previous version was mostly a frontend prototype with mock/static dashboard data. The submit form showed a success message, but it did not save real requests. The Worker was still an early prototype and did not match the final required Groq + Supabase architecture.
 
----
+The current version now has a real end-to-end structure:
 
-## Current Overall Progress
+```text
+Submit form -> Worker validation -> Groq classification -> Supabase storage -> Dashboard/reporting
+```
 
-| Area                 | Progress |
-| -------------------- | -------- |
-| Frontend UI          | 85%      |
-| Routing              | 90%      |
-| Ticket Submission    | 75%      |
-| Backend Architecture | 70%      |
-| Database Integration | 40%      |
-| Zendesk Integration  | 20%      |
-| Authentication       | 0%       |
-| AI Integration       | 0%       |
-| Overall Project      | 55%      |
+## Current Status
 
----
+Completed:
 
-## Next Major Milestones
+- Frontend request submission form
+- Dashboard and reporting views
+- Worker API endpoints
+- Groq integration structure
+- Supabase tracker schema
+- Frontend-to-Worker API client
+- Environment templates
+- Handover documentation
+- Worker tests
 
-### Immediate
+Still to improve:
 
-* Complete Prisma database integration
-* Persist tickets to PostgreSQL
-* Connect Zendesk API
-* Build ticket retrieval functionality
+- Real file uploads for evidence
+- Authentication and role-based access
+- Request detail page
+- In-app owner/status editing UI
+- Production deployment
+- Final Miro board and Gamma presentation
 
-### Short-Term
+## Testing
 
-* Authentication
-* Role-based access control
-* Admin dashboard
-* Ticket management interface
-
-### Long-Term
-
-* OpenAI integration
-* AI ticket triage
-* Knowledge base assistant
-* Analytics and reporting
-* Cloud deployment
-* CI/CD pipeline
-
-
-## ⚙️ Local Development
-
-### 1. Clone repo
+Frontend build:
 
 ```bash
-git clone https://github.com/RorisangMokati/digify-ai-support-portal.git
-cd digify-ai-support-ops-portal
+npm run build
 ```
 
----
-
-### 2. Install dependencies
-
-Frontend:
+Frontend lint:
 
 ```bash
-npm install
+npm run lint
 ```
 
-Worker:
+Worker tests:
 
 ```bash
 cd worker/ai-support-worker
-npm install
+npm test
 ```
 
----
+## Deployment Notes
 
-### 3. Run frontend
+Frontend should be deployed to Netlify.
 
-```bash
-npm run dev
-```
-
----
-
-### 4. Run Cloudflare Worker
+Cloudflare Worker should be deployed with Wrangler:
 
 ```bash
 cd worker/ai-support-worker
-npm run dev
+npm run deploy
 ```
 
-Worker runs on:
+Set production Worker secrets with:
 
-```
-http://127.0.0.1:8787
-```
-
----
-
-## 🧪 API Testing
-
-### Chat Endpoint
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/chat" `
--Method POST `
--Headers @{ "Content-Type" = "application/json" } `
--Body '{"message":"Hello"}'
+```bash
+wrangler secret put GROQ_API_KEY
+wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 ```
 
----
+Set the deployed frontend URL as `ALLOWED_ORIGIN` in the Worker configuration.
 
-### Ticket Endpoint
+## Contributors
 
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8787/api/tickets" `
--Method POST `
--Headers @{ "Content-Type" = "application/json" } `
--Body '{"title":"Login Issue"}'
-```
+- Rorisang Mokati
+- Sanelisiwe Mbhele
+- Noluthando Shangase
+- Sbahle Ngidi
+- Tristan Govender
 
----
-
-## 🚧 Current Status
-
-✅ Frontend UI scaffolded
-✅ Cloudflare Worker API built
-✅ Endpoints tested successfully
-✅ GitHub repository connected
-⬜ AI integration (next step)
-⬜ Frontend ↔ Backend connection
-⬜ Deployment to Cloudflare
-
----
-
-## 🔮 Roadmap
-
-* [ ] Integrate OpenAI into `/api/chat`
-* [ ] Connect frontend chat UI to backend
-* [ ] Store tickets in database (D1 / Firebase)
-* [ ] Add authentication (optional)
-* [ ] Deploy to Cloudflare Workers
-
----
-
-## 👥 Contributors
-
-* Rorisang Mokati
-* Sanelisiwe Mbhele
-* Noluthando Shangase
-* Sbahle Ngidi
-* Tristan Govender
-
----
-
-## 📄 License
+## License
 
 MIT License
-

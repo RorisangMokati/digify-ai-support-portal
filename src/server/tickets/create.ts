@@ -2,6 +2,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { Priority, TicketStatus } from "@prisma/client";
 import { db } from "./db";
 import sendToZendesk from "./zendesk";
 
@@ -12,17 +13,19 @@ export const createTicket = createServerFn({ method: "POST" })
       message: z.string(),
       category: z.string(),
       priority: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
+    const priority = normalizePriority(data.priority);
+
     // 1. Save to database
     const ticket = await db.ticket.create({
       data: {
         title: data.title,
         message: data.message,
         category: data.category,
-        priority: data.priority,
-        status: "open",
+        priority,
+        status: TicketStatus.OPEN,
       },
     });
 
@@ -30,7 +33,7 @@ export const createTicket = createServerFn({ method: "POST" })
     await sendToZendesk({
       subject: `[${data.category}] ${data.title}`,
       comment: { body: data.message },
-      priority: data.priority.toLowerCase(),
+      priority: priority.toLowerCase(),
     });
 
     return {
@@ -38,3 +41,13 @@ export const createTicket = createServerFn({ method: "POST" })
       ticket,
     };
   });
+
+function normalizePriority(priority: string) {
+  const normalized = priority.toUpperCase();
+
+  if (normalized === "LOW") return Priority.LOW;
+  if (normalized === "HIGH") return Priority.HIGH;
+  if (normalized === "URGENT" || normalized === "CRITICAL") return Priority.URGENT;
+
+  return Priority.MEDIUM;
+}

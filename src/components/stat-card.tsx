@@ -19,12 +19,16 @@ export function StatCard({ label, value, delta, trend = "neutral", icon: Icon }:
             <p className="text-sm font-medium text-muted-foreground">{label}</p>
             <p className="mt-2 text-3xl font-semibold tracking-tight">{value}</p>
             {delta && (
-              <p className={cn(
-                "mt-1 text-xs font-medium",
-                trend === "up" && "text-success",
-                trend === "down" && "text-destructive",
-                trend === "neutral" && "text-muted-foreground",
-              )}>{delta}</p>
+              <p
+                className={cn(
+                  "mt-1 text-xs font-medium",
+                  trend === "up" && "text-success",
+                  trend === "down" && "text-destructive",
+                  trend === "neutral" && "text-muted-foreground",
+                )}
+              >
+                {delta}
+              </p>
             )}
           </div>
           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">

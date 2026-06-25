@@ -21,7 +21,7 @@ export const createTicket = createServerFn({ method: "POST" })
     z.object({
       title: z.string().min(1),
       message: z.string().min(1),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const newTicket: Ticket = {
@@ -38,8 +38,6 @@ export const createTicket = createServerFn({ method: "POST" })
   });
 
 /* ---------------- READ ALL ---------------- */
-export const getTickets = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return { tickets };
-  }
-);
+export const getTickets = createServerFn({ method: "GET" }).handler(async () => {
+  return { tickets };
+});
