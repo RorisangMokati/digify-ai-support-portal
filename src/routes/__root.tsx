@@ -116,6 +116,7 @@ function RootShell({ children }: { children: ReactNode }) {
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { Chatbot } from "@/components/Chatbot";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -142,6 +143,7 @@ function RootComponent() {
             </main>
           </div>
         </div>
+         <Chatbot />
         <Toaster />
       </SidebarProvider>
     </QueryClientProvider>
