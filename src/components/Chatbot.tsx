@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 export function Chatbot() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
+
 
   const [messages, setMessages] = useState<
     { sender: "user" | "bot"; text: string }[]
@@ -17,14 +21,17 @@ export function Chatbot() {
   }
 
   // Submit Request
-  if (
-    msg.includes("submit request") ||
-    msg.includes("create request") ||
-    msg.includes("ticket") ||
-    msg.includes("new request")
-  ) {
-    return "To submit a request, click the 'Submit Request' option in the left menu, complete the form, attach any evidence if required, and click Submit.";
-  }
+if (
+  msg.includes("submit") ||
+  msg.includes("request") ||
+  msg.includes("ticket") ||
+  msg.includes("issue") ||
+  msg.includes("problem") ||
+  msg.includes("help me") ||
+  msg.includes("create")
+) {
+  return "Sure! I can help you submit a support request. Click 'Submit Request' from the left menu, complete the form, attach any evidence if needed, and click Submit.";
+}
 
   // Dashboard
   if (msg.includes("dashboard")) {
@@ -77,18 +84,53 @@ export function Chatbot() {
   return "I'm sorry, I don't understand that question. Try asking about submitting requests, reports, settings, request status, evidence, or the dashboard.";
 }
 
-  function sendMessage() {
+    function sendMessage() {
     if (!message.trim()) return;
 
     const userMessage = {
-      sender: "user" as const,
-      text: message,
+        sender: "user" as const,
+        text: message,
     };
 
+    const reply = getBotReply(message);
+
     const botMessage = {
-      sender: "bot" as const,
-      text: getBotReply(message),
+        sender: "bot" as const,
+        text: reply,
     };
+
+  // Check if the user wants to navigate somewhere
+    const msg = message.toLowerCase();
+
+    if (
+        msg.includes("submit") ||
+        msg.includes("new request") ||
+        msg.includes("create ticket")
+    ) {
+        navigate({ to: "/submit" });
+    }
+
+    if (
+        msg.includes("report") ||
+        msg.includes("statistics")
+    ) {
+        navigate({ to: "/reports" });
+    }
+
+    if (
+        msg.includes("dashboard") ||
+        msg.includes("home")
+    ) {
+        navigate({ to: "/" });
+    }
+
+    if (
+        msg.includes("setting") ||
+        msg.includes("profile")
+    ) {
+        navigate({ to: "/settings" });
+    }
+
 
     setMessages((prev) => [...prev, userMessage, botMessage]);
     setMessage("");
